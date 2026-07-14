@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Propuesta Q-Leap: Qurable Engage Copilot, inteligencia para convertir señales de loyalty en campañas y journeys accionables.">
+  <title>Qurable Engage Copilot · Propuesta Q-Leap</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f7f4ec;
+      --surface: #fffdf8;
+      --border: #22211f;
+      --text: #181817;
+      --text-dim: #666158;
+      --orange: #ee6c26;
+      --red: #d84737;
+      --blue: #245ab5;
+      --sage: #bdc9a7;
+      --yellow: #f2cd65;
+      --shadow: 7px 7px 0 #22211f;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: "Bricolage Grotesque", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .22;
+      background-image:
+        linear-gradient(rgba(24, 24, 23, .08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(24, 24, 23, .08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      z-index: -1;
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 5px;
+      background: var(--orange);
+      z-index: 20;
+      transition: width .15s linear;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 15;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, .92);
+      backdrop-filter: blur(10px);
+      font-family: "Azeret Mono", monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--orange); }
+    .slide-count { color: var(--text-dim); }
+
+    main { width: 100%; }
+    .slide {
+      min-height: 100vh;
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      padding: 110px 6vw 70px;
+      display: grid;
+      align-content: center;
+      position: relative;
+      min-width: 0;
+    }
+
+    .eyebrow, .tag {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      font-family: "Azeret Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 980px;
+      margin: 28px 0 20px;
+      font-size: clamp(54px, 8.6vw, 122px);
+      line-height: .86;
+      letter-spacing: -.06em;
+      font-weight: 800;
+    }
+    h1 span { color: var(--orange); }
+    h2 {
+      max-width: 950px;
+      margin-bottom: 26px;
+      font-size: clamp(40px, 6vw, 78px);
+      line-height: .96;
+      letter-spacing: -.045em;
+    }
+    h3 { font-size: 25px; line-height: 1.04; letter-spacing: -.025em; }
+    .lead {
+      max-width: 820px;
+      font-size: clamp(20px, 2.4vw, 32px);
+      line-height: 1.25;
+      color: var(--text-dim);
+    }
+    .lead strong { color: var(--text); }
+
+    .hero-grid, .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(360px, .98fr);
+      gap: clamp(32px, 5vw, 70px);
+      align-items: center;
+    }
+
+    .art {
+      width: 100%;
+      display: block;
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .caption {
+      margin: 15px 0 0;
+      font-family: "Azeret Mono", monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-dim);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+    .card {
+      min-width: 0;
+      padding: 24px;
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      background: var(--surface);
+      box-shadow: 4px 4px 0 var(--border);
+    }
+    .card p { margin-bottom: 0; color: var(--text-dim); line-height: 1.48; }
+    .card.orange { background: #fff0e6; }
+    .card.blue { background: #eaf1ff; }
+    .card.sage { background: #eef2e7; }
+    .card.yellow { background: #fff6d7; }
+    .card.red { background: #fff0ed; }
+    .number {
+      display: block;
+      margin-bottom: 24px;
+      font-family: "Azeret Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--orange);
+    }
+
+    .quote {
+      max-width: 1050px;
+      padding-left: 30px;
+      border-left: 10px solid var(--orange);
+      font-size: clamp(32px, 5vw, 68px);
+      line-height: 1.05;
+      letter-spacing: -.04em;
+      font-weight: 700;
+    }
+    .quote small {
+      display: block;
+      margin-top: 24px;
+      font-family: "Azeret Mono", monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      letter-spacing: 0;
+      color: var(--text-dim);
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+      position: relative;
+    }
+    .stage {
+      min-width: 0;
+      min-height: 350px;
+      padding: 26px;
+      border: 2px solid var(--border);
+      border-radius: 22px;
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+    .stage::after {
+      content: attr(data-stage);
+      position: absolute;
+      right: 12px;
+      bottom: -22px;
+      font-family: "Azeret Mono", monospace;
+      font-size: 100px;
+      font-weight: 700;
+      color: rgba(24, 24, 23, .06);
+    }
+    .stage:nth-child(1) { box-shadow: 6px 6px 0 var(--blue); }
+    .stage:nth-child(2) { box-shadow: 6px 6px 0 var(--orange); }
+    .stage:nth-child(3) { box-shadow: 6px 6px 0 var(--red); }
+    .stage ul { padding-left: 19px; line-height: 1.65; color: var(--text-dim); }
+    .stage .tag { margin-bottom: 24px; }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+    .layer {
+      display: grid;
+      grid-template-columns: 170px minmax(0, 1fr) minmax(220px, .55fr);
+      gap: 22px;
+      align-items: center;
+      padding: 18px 20px;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      background: var(--surface);
+    }
+    .layer strong { font-size: 20px; }
+    .layer p { margin: 0; color: var(--text-dim); }
+    .layer code {
+      font-family: "Azeret Mono", monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--blue);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 9px;
+      align-items: stretch;
+    }
+    .flow-step {
+      min-width: 0;
+      min-height: 160px;
+      padding: 17px;
+      border: 2px solid var(--border);
+      border-radius: 15px;
+      background: var(--surface);
+      position: relative;
+    }
+    .flow-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      padding: 2px;
+      background: var(--bg);
+      color: var(--orange);
+      font-size: 25px;
+      font-weight: 800;
+    }
+    .flow-step span { font-family: "Azeret Mono", monospace; font-size: 11px; color: var(--orange); }
+    .flow-step h3 { margin: 16px 0 8px; font-size: 19px; }
+    .flow-step p { margin: 0; font-size: 14px; color: var(--text-dim); }
+
+    .scope-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .scope {
+      padding: 28px;
+      border: 2px solid var(--border);
+      border-radius: 22px;
+      background: var(--surface);
+    }
+    .scope h3 { display: flex; align-items: center; gap: 10px; }
+    .scope ul { margin: 0; padding-left: 20px; line-height: 1.75; color: var(--text-dim); }
+    .yes h3::before, .no h3::before { content: ""; width: 12px; height: 12px; border-radius: 50%; }
+    .yes h3::before { background: var(--sage); border: 2px solid var(--border); }
+    .no h3::before { background: var(--red); border: 2px solid var(--border); }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .metric {
+      padding: 22px;
+      border-top: 5px solid var(--orange);
+      background: var(--surface);
+    }
+    .metric b { display: block; font-size: 24px; margin-bottom: 8px; }
+    .metric span { color: var(--text-dim); }
+
+    .guardrails {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .guardrail {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 12px;
+      padding: 20px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+    }
+    .guardrail b:first-child {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      background: #fff0ed;
+      color: var(--red);
+      font-family: "Azeret Mono", monospace;
+    }
+    .guardrail p { margin: 5px 0 0; color: var(--text-dim); }
+
+    .closing {
+      min-height: 100vh;
+      text-align: center;
+      justify-items: center;
+    }
+    .closing h2 { max-width: 1050px; font-size: clamp(48px, 8vw, 112px); }
+    .closing .lead { max-width: 780px; }
+    .brandline {
+      margin-top: 38px;
+      font-family: "Azeret Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      font-weight: 700;
+      color: var(--orange);
+    }
+
+    .hint {
+      position: absolute;
+      right: 6vw;
+      bottom: 26px;
+      font-family: "Azeret Mono", monospace;
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid, .split, .roadmap, .cards { grid-template-columns: 1fr; }
+      .roadmap { gap: 28px; }
+      .stage { min-height: auto; }
+      .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      .flow-step:not(:last-child)::after { display: none; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .layer { grid-template-columns: 1fr; gap: 8px; }
+    }
+
+    @media (max-width: 620px) {
+      .slide { padding: 95px 20px 55px; }
+      h1 { font-size: 52px; }
+      h2 { font-size: 40px; }
+      .topbar { width: calc(100% - 32px); justify-content: center; }
+      .scope-grid, .guardrails, .metrics, .flow { grid-template-columns: 1fr; }
+      .card, .stage, .scope { padding: 20px; }
+      .art { border-radius: 14px; box-shadow: 4px 4px 0 var(--border); }
+      .hint { display: none; }
+    }
+
+    @media print {
+      .topbar, .progress, .hint { display: none; }
+      .slide { min-height: auto; break-after: page; padding: 50px; }
+      body::before { display: none; }
+    }
+
+    body.gate-locked {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    body.gate-locked > :not(.access-gate) {
+      visibility: hidden;
+    }
+
+    .access-gate {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: var(--bg);
+    }
+
+    .access-gate[hidden] { display: none; }
+
+    .access-card {
+      width: min(520px, 100%);
+      padding: clamp(28px, 6vw, 54px);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .access-card h1 {
+      margin: 24px 0 14px;
+      font-size: clamp(42px, 8vw, 72px);
+      line-height: .9;
+    }
+
+    .access-card p {
+      color: var(--text-dim);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .access-form { display: grid; gap: 12px; margin-top: 28px; }
+
+    .access-form label {
+      font-family: "Azeret Mono", monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .access-form input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text);
+      font: 600 16px "Azeret Mono", monospace;
+      outline: none;
+    }
+
+    .access-form input:focus { box-shadow: 0 0 0 4px rgba(238, 108, 38, .22); }
+
+    .access-form button {
+      padding: 15px 18px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--orange);
+      color: #181817;
+      font: 700 14px "Azeret Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      cursor: pointer;
+      box-shadow: 3px 3px 0 var(--border);
+    }
+
+    .access-form button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--border); }
+
+    .access-error {
+      min-height: 21px;
+      margin: 0 !important;
+      color: var(--red) !important;
+      font-family: "Azeret Mono", monospace;
+      font-size: 12px !important;
+    }
+  </style>
+</head>
+<body class="gate-locked">
+  <aside class="access-gate" id="accessGate" aria-labelledby="accessTitle">
+    <div class="access-card">
+      <span class="eyebrow">Acceso privado</span>
+      <h1 id="accessTitle">Qurable<br><span>Engage Copilot</span></h1>
+      <p>Ingresá la contraseña compartida por el equipo para abrir la propuesta Q-Leap.</p>
+      <form class="access-form" id="accessForm">
+        <label for="accessPassword">Contraseña</label>
+        <input id="accessPassword" name="password" type="password" autocomplete="current-password" required autofocus>
+        <button type="submit">Entrar</button>
+        <p class="access-error" id="accessError" role="alert" aria-live="polite"></p>
+      </form>
+      <noscript>Esta presentación necesita JavaScript habilitado para validar el acceso.</noscript>
+    </div>
+  </aside>
+  <div class="progress" id="progress"></div>
+  <div class="topbar">
+    <span class="dot"></span>
+    <span>Qurable Engage Copilot</span>
+    <span class="slide-count" id="slideCount">01 / 12</span>
+  </div>
+
+  <main>
+    <section class="slide" id="inicio">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">Propuesta Q-Leap · MVP</span>
+          <h1>Qurable<br><span>Engage Copilot</span></h1>
+          <p class="lead">De señales dispersas a una <strong>campaña personalizada, explicable y lista para aprobar.</strong></p>
+          <p class="brandline">Intelligence → Outbound → Adaptive Funnel</p>
+        </div>
+        <div>
+          <img class="art" src="assets/01-senales-a-campania.png" alt="Ilustración de señales de loyalty convertidas en una campaña lista para aprobación">
+          <p class="caption">El agente conecta el contexto; las reglas protegen el negocio; marketing conserva la decisión final.</p>
+        </div>
+      </div>
+      <span class="hint">↓ Scroll · Flechas para navegar</span>
+    </section>
+
+    <section class="slide">
+      <div class="split">
+        <div>
+          <span class="eyebrow">El problema</span>
+          <h2>Tener herramientas no garantiza un programa exitoso.</h2>
+          <p class="lead">Qurable permite crear audiencias, campañas, beneficios y pushes. Pero muchos equipos todavía dependen de trabajo manual y conocimiento experto para decidir <strong>qué hacer, con quién y cuándo.</strong></p>
+          <div class="cards">
+            <article class="card red"><h3>Datos dispersos</h3><p>Señales valiosas que no siempre terminan en una acción.</p></article>
+            <article class="card yellow"><h3>Decisión manual</h3><p>Marketing debe construir cada segmento y campaña desde cero.</p></article>
+            <article class="card blue"><h3>Poco aprendizaje</h3><p>El resultado no vuelve como evidencia para la próxima acción.</p></article>
+          </div>
+        </div>
+        <div>
+          <img class="art" src="assets/02-problema-herramientas-manuales.png" alt="Ilustración del trabajo manual para coordinar herramientas de campañas">
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="eyebrow">La idea central</span>
+      <p class="quote">No construir otra IA que “inventa campañas”. Construir la inteligencia que convierte el contexto propio de Qurable en la <span style="color:var(--orange)">próxima mejor acción.</span>
+        <small>Señales del miembro + capacidades del programa + restricciones del negocio + aprobación humana.</small>
+      </p>
+      <div class="cards" style="margin-top:48px">
+        <article class="card"><span class="number">01 · OBSERVAR</span><h3>Entender señales</h3><p>Puntos, redenciones, afinidad, inactividad, misiones y respuesta previa.</p></article>
+        <article class="card orange"><span class="number">02 · DECIDIR</span><h3>Recomendar una acción</h3><p>Audiencia, incentivo, canal, mensaje, timing y KPI con una justificación visible.</p></article>
+        <article class="card sage"><span class="number">03 · ACTIVAR</span><h3>Usar el core de Qurable</h3><p>Crear un borrador accionable y medir qué ocurrió después.</p></article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="eyebrow">Roadmap de producto</span>
+      <h2>Tres etapas. Una visión progresiva.</h2>
+      <p class="lead">Cada etapa entrega valor por sí misma y habilita la siguiente. El MVP demuestra la primera y anticipa las otras dos.</p>
+      <div class="roadmap">
+        <article class="stage" data-stage="1">
+          <span class="tag">Ahora · MVP</span>
+          <h3>Intelligence Copilot</h3>
+          <p>El agente encuentra patrones, detecta oportunidades y enseña cómo convertirlas en campañas dentro de Qurable.</p>
+          <ul>
+            <li>Patrones y segmentos.</li>
+            <li>Campañas sugeridas.</li>
+            <li>Know-how de plataforma.</li>
+            <li>Razones y datos faltantes.</li>
+          </ul>
+        </article>
+        <article class="stage" data-stage="2">
+          <span class="tag">Siguiente</span>
+          <h3>Personalized Outbound</h3>
+          <p>La recomendación se convierte en audiencia, beneficio y push, adaptados al miembro o segmento.</p>
+          <ul>
+            <li>Triggers por comportamiento.</li>
+            <li>Next best offer.</li>
+            <li>Frecuencia y quiet hours.</li>
+            <li>Borrador con aprobación.</li>
+          </ul>
+        </article>
+        <article class="stage" data-stage="3">
+          <span class="tag">Visión</span>
+          <h3>Adaptive Funnel</h3>
+          <p>Journeys secuenciales que cambian según lo que cada miembro hace —o no hace— después.</p>
+          <ul>
+            <li>Retargeting en canales propios.</li>
+            <li>Estados del funnel.</li>
+            <li>Experimentos y control.</li>
+            <li>Aprendizaje continuo.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="eyebrow">Dónde entra la IA</span>
+      <h2>IA donde aporta criterio. Reglas donde hace falta control.</h2>
+      <div class="stack">
+        <div class="layer">
+          <strong>Agente / LLM</strong>
+          <p>Interpreta el objetivo, resume patrones, propone alternativas, explica y genera copy.</p>
+          <code>objetivo → hipótesis → recomendación</code>
+        </div>
+        <div class="layer">
+          <strong>Analytics</strong>
+          <p>Agrupa miembros, calcula afinidad, rankea oportunidades y compara performance.</p>
+          <code>señales → segmentos → score</code>
+        </div>
+        <div class="layer">
+          <strong>Reglas</strong>
+          <p>Controlan elegibilidad, presupuesto, margen, frecuencia, consentimiento y vigencia.</p>
+          <code>policy → límites → seguridad</code>
+        </div>
+        <div class="layer">
+          <strong>MCP Qurable</strong>
+          <p>Expone campañas, audiencias y beneficios; crea borradores dentro de la plataforma.</p>
+          <code>read tools → draft tools → audit</code>
+        </div>
+        <div class="layer">
+          <strong>Marketing</strong>
+          <p>Define el objetivo y aprueba antes de activar. El copiloto amplifica; no reemplaza.</p>
+          <code>review → approve → launch</code>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="eyebrow">Etapa 1 · Demo Q-Leap</span>
+      <h2>Una oportunidad concreta, de punta a punta.</h2>
+      <div class="flow">
+        <article class="flow-step"><span>01</span><h3>Objetivo</h3><p>“Quiero reactivar miembros sin superar este costo”.</p></article>
+        <article class="flow-step"><span>02</span><h3>Señales</h3><p>Inactividad, redenciones, puntos, afinidad y beneficios disponibles.</p></article>
+        <article class="flow-step"><span>03</span><h3>Patrón</h3><p>Segmento explicable y evidencia que lo sostiene.</p></article>
+        <article class="flow-step"><span>04</span><h3>Propuesta</h3><p>Audiencia, beneficio, push, timing y KPI.</p></article>
+        <article class="flow-step"><span>05</span><h3>Aprobación</h3><p>Marketing revisa supuestos, costo y mensaje.</p></article>
+        <article class="flow-step"><span>06</span><h3>Borrador</h3><p>La campaña queda creada mediante el MCP.</p></article>
+      </div>
+      <div class="card orange" style="margin-top:30px">
+        <h3>Momento “wow” de la demo</h3>
+        <p>Un objetivo escrito en lenguaje natural termina, en minutos, convertido en una campaña real y explicada dentro de Qurable.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="split">
+        <div>
+          <span class="eyebrow">Etapa 3 · Retargeting</span>
+          <h2>Avanzar por el funnel según la respuesta.</h2>
+          <p class="lead">No es solamente volver a impactar. Es elegir la <strong>siguiente interacción útil</strong> usando lo que Qurable ya sabe del miembro.</p>
+          <div class="cards" style="grid-template-columns:1fr">
+            <article class="card blue"><h3>Top</h3><p>Reconocer interés y aportar valor sin entregar todavía el incentivo máximo.</p></article>
+            <article class="card yellow"><h3>Middle</h3><p>Presentar una propuesta relevante y observar nuevas señales.</p></article>
+            <article class="card orange"><h3>Bottom</h3><p>Activar el beneficio correcto cuando existe intención suficiente.</p></article>
+          </div>
+        </div>
+        <div>
+          <img class="art" src="assets/03-retargeting-funnel.png" alt="Ilustración de un journey secuencial desde interés hasta conversión">
+          <p class="caption">En canales propios conviene hablar de lifecycle retargeting o behavior-triggered journey, no de publicidad paga tradicional.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="eyebrow">Alcance</span>
+      <h2>Qué construimos en un día.</h2>
+      <div class="scope-grid">
+        <article class="scope yes">
+          <h3>Dentro del MVP</h3>
+          <ul>
+            <li>Un objetivo: reactivación.</li>
+            <li>Dataset real anonimizado o simulado.</li>
+            <li>Detección de un patrón explicable.</li>
+            <li>Tres campañas sugeridas.</li>
+            <li>Audiencia, beneficio, push y timing.</li>
+            <li>Creación de borrador o tool mock.</li>
+            <li>Resultado y ROI simulados.</li>
+          </ul>
+        </article>
+        <article class="scope no">
+          <h3>Fuera del MVP</h3>
+          <ul>
+            <li>Envíos reales sin aprobación.</li>
+            <li>Autonomía total.</li>
+            <li>Entrenamiento de modelos propios.</li>
+            <li>Todos los verticales y objetivos.</li>
+            <li>Atribución perfecta.</li>
+            <li>Optimización automática de descuentos.</li>
+            <li>Integraciones con Ads.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="eyebrow">Cómo medir valor</span>
+      <h2>La medición empieza en la etapa 1.</h2>
+      <div class="metrics">
+        <div class="metric"><b>Time-to-campaign</b><span>De horas o días a minutos.</span></div>
+        <div class="metric"><b>Adopción</b><span>Recomendaciones aceptadas o editadas.</span></div>
+        <div class="metric"><b>Reactivación</b><span>Miembros que vuelven a interactuar.</span></div>
+        <div class="metric"><b>ROI</b><span>Ingreso incremental menos costo del incentivo.</span></div>
+      </div>
+      <div class="cards" style="margin-top:28px">
+        <article class="card"><h3>En Q-Leap</h3><p>Medir tiempo ahorrado, completitud del borrador y claridad de la explicación.</p></article>
+        <article class="card sage"><h3>En un piloto</h3><p>Comparar contra grupo control: reactivación, redención, revenue y opt-out.</p></article>
+        <article class="card orange"><h3>En producto</h3><p>Usar cada respuesta como nueva señal para la próxima decisión.</p></article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="eyebrow">Guardrails</span>
+      <h2>Personalización sin perder control ni confianza.</h2>
+      <div class="guardrails">
+        <article class="guardrail"><b>01</b><div><strong>Aprobación humana</strong><p>El MVP crea borradores; no dispara campañas solo.</p></div></article>
+        <article class="guardrail"><b>02</b><div><strong>Presupuesto y margen</strong><p>La IA propone dentro de límites configurados.</p></div></article>
+        <article class="guardrail"><b>03</b><div><strong>Frecuencia</strong><p>Quiet hours, caps y exclusiones para evitar saturación.</p></div></article>
+        <article class="guardrail"><b>04</b><div><strong>Privacidad</strong><p>Consentimiento, opt-out y prohibición de atributos sensibles.</p></div></article>
+        <article class="guardrail"><b>05</b><div><strong>Explicabilidad</strong><p>Cada recomendación muestra señales, supuestos y datos faltantes.</p></div></article>
+        <article class="guardrail"><b>06</b><div><strong>Experimentación</strong><p>No prometer uplift: probar con control y nivel de confianza.</p></div></article>
+      </div>
+    </section>
+
+    <section class="slide">
+      <span class="eyebrow">Por qué Qurable</span>
+      <h2>El diferencial no es el LLM. Es el loop que Qurable puede cerrar.</h2>
+      <div class="cards">
+        <article class="card blue"><span class="number">DATA</span><h3>Conoce el programa</h3><p>Miembros, puntos, redenciones, beneficios, campañas y misiones.</p></article>
+        <article class="card orange"><span class="number">ACTION</span><h3>Puede ejecutar</h3><p>No se queda en una recomendación: configura una acción concreta.</p></article>
+        <article class="card sage"><span class="number">PROOF</span><h3>Puede aprender</h3><p>La respuesta y la redención vuelven como evidencia de negocio.</p></article>
+      </div>
+      <p class="quote" style="font-size:clamp(28px,4vw,54px); margin-top:54px">Copiloto hoy. Outbound personalizado mañana. Funnel adaptativo después.</p>
+    </section>
+
+    <section class="slide closing">
+      <span class="eyebrow">La propuesta</span>
+      <h2>Convertir loyalty en una <span style="color:var(--orange)">decisión accionable.</span></h2>
+      <p class="lead">Qurable Engage Copilot detecta oportunidades y transforma un objetivo de negocio en una campaña lista para aprobar: audiencia, incentivo, mensaje, timing y medición.</p>
+      <p class="brandline">Del dato → a la acción → al aprendizaje</p>
+    </section>
+  </main>
+
+  <script>
+    const ACCESS_HASH = 'ca844500744dab21cd607eaca94a5308309cc29208634a3b8c0c65eed028817a';
+    const accessGate = document.getElementById('accessGate');
+    const accessForm = document.getElementById('accessForm');
+    const accessPassword = document.getElementById('accessPassword');
+    const accessError = document.getElementById('accessError');
+
+    function unlockPresentation() {
+      document.body.classList.remove('gate-locked');
+      accessGate.hidden = true;
+      sessionStorage.setItem('qurable-engage-access', 'granted');
+    }
+
+    async function sha256(value) {
+      const data = new TextEncoder().encode(value);
+      const digest = await crypto.subtle.digest('SHA-256', data);
+      return [...new Uint8Array(digest)]
+        .map(byte => byte.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    if (sessionStorage.getItem('qurable-engage-access') === 'granted') {
+      unlockPresentation();
+    }
+
+    accessForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      accessError.textContent = '';
+      const candidateHash = await sha256(accessPassword.value);
+      if (candidateHash === ACCESS_HASH) {
+        accessPassword.value = '';
+        unlockPresentation();
+        return;
+      }
+      accessPassword.value = '';
+      accessError.textContent = 'Contraseña incorrecta.';
+      accessPassword.focus();
+    });
+
+    const slides = [...document.querySelectorAll('.slide')];
+    const progress = document.getElementById('progress');
+    const slideCount = document.getElementById('slideCount');
+
+    function updatePosition() {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const percentage = max > 0 ? (scrollY / max) * 100 : 0;
+      progress.style.width = `${percentage}%`;
+      const middle = scrollY + innerHeight / 2;
+      let active = 0;
+      slides.forEach((slide, index) => {
+        if (slide.offsetTop <= middle) active = index;
+      });
+      slideCount.textContent = `${String(active + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+    }
+
+    function go(direction) {
+      const middle = scrollY + innerHeight / 2;
+      let active = slides.findIndex(slide => slide.offsetTop + slide.offsetHeight > middle);
+      if (active < 0) active = slides.length - 1;
+      const target = Math.max(0, Math.min(slides.length - 1, active + direction));
+      slides[target].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    addEventListener('scroll', updatePosition, { passive: true });
+    addEventListener('resize', updatePosition);
+    addEventListener('keydown', event => {
+      if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].includes(event.key)) {
+        event.preventDefault();
+        go(1);
+      }
+      if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(event.key)) {
+        event.preventDefault();
+        go(-1);
+      }
+      if (event.key === 'Home') slides[0].scrollIntoView({ behavior: 'smooth' });
+      if (event.key === 'End') slides.at(-1).scrollIntoView({ behavior: 'smooth' });
+    });
+    updatePosition();
+  </script>
+</body>
+</html>

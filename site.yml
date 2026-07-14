@@ -1,0 +1,19 @@
+slug: qurable-engage-copilot-qleap
+title: Qurable Engage Copilot - Q-Leap
+github:
+  owner: ErickRRB
+  repo: qurable-engage-copilot-qleap
+  url: https://github.com/ErickRRB/qurable-engage-copilot-qleap
+pages:
+  url: https://ErickRRB.github.io/qurable-engage-copilot-qleap/
+  source_branch: main
+  source_path: /
+local:
+  published_html: /Users/erick/Sky/html-docs/qurable-engage-copilot-qleap/index.html
+  assets: /Users/erick/Sky/html-docs/qurable-engage-copilot-qleap/assets
+access:
+  type: client-side-sha256-gate
+  storage: session
+notes:
+  - Static HTML served by GitHub Pages.
+  - Client-side password gate is not strong authentication.
