@@ -2,6 +2,12 @@
 
 Presentación HTML ilustrada de la propuesta Q-Leap para convertir señales de loyalty en campañas personalizadas, outbound y funnels adaptativos.
 
+La narrativa está organizada en tres capítulos:
+
+1. Problema.
+2. Solución.
+3. Proceso creativo.
+
 ## Contenido
 
 - `index.html`: presentación y acceso con contraseña mediante hash SHA-256.
