@@ -8,6 +8,8 @@ La narrativa está organizada en tres capítulos:
 2. Solución.
 3. Proceso creativo.
 
+La versión actual recorre 13 pantallas y utiliza ilustraciones optimizadas para lectura en proyección, tablet y móvil.
+
 ## Contenido
 
 - `index.html`: presentación y acceso con contraseña mediante hash SHA-256.
