@@ -1,6 +1,6 @@
 # Qurable Engage Copilot · Q-Leap
 
-Presentación HTML ilustrada de la propuesta Q-Leap para convertir señales de loyalty en campañas personalizadas, outbound y funnels adaptativos.
+Presentación HTML ilustrada de Q-Leap, alineada con el vocabulario y las capacidades visibles en Snapp: Customer data, Predictions, Next Best Actions, Strategies, Campaigns, Rewards, Outreach y Dashboards.
 
 La narrativa está organizada en tres capítulos:
 
