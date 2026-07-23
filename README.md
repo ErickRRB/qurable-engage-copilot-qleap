@@ -1,6 +1,6 @@
 # Qurable Engage Copilot · Q-Leap
 
-Presentación HTML ilustrada de Q-Leap, alineada con el vocabulario y las capacidades visibles en Qurable: Customer data, Predictions, Next Best Actions, Strategies, Campaigns, Rewards, Outreach y Dashboards.
+Presentación HTML bilingüe (ES/EN) de Q-Leap, alineada con el vocabulario y las capacidades visibles en Qurable. El selector de idioma adapta la narrativa y los términos de producto —por ejemplo, Predicciones/Predictions, Próximas mejores acciones/Next Best Actions, Campañas/Campaigns y Difusión/Outreach— sin alterar el layout.
 
 La narrativa está organizada en tres capítulos:
 

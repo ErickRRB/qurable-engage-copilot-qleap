@@ -122,6 +122,8 @@
       font-weight: 800;
     }
     h1 span { color: var(--orange); }
+    h1 span.i18n-plain,
+    .closing h2 span.i18n-plain { color: inherit; }
     h2 {
       max-width: 1100px;
       margin-bottom: 26px;
@@ -610,6 +612,60 @@
       color: var(--text-dim);
     }
 
+    .slide strong.app-term {
+      display: inline;
+      margin: 0;
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      font-style: inherit;
+      line-height: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+    }
+
+    .language-switcher {
+      position: fixed;
+      top: 18px;
+      right: 22px;
+      z-index: 1100;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 4px;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, .94);
+      box-shadow: 3px 3px 0 rgba(34, 33, 31, .16);
+      backdrop-filter: blur(10px);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .language-switcher:hover {
+      transform: translateY(-2px);
+      border-color: var(--orange);
+      box-shadow: 4px 5px 0 rgba(34, 33, 31, .18);
+    }
+
+    .language-switcher button {
+      min-width: 38px;
+      padding: 7px 9px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--text-dim);
+      font: 700 11px "Azeret Mono", monospace;
+      letter-spacing: .06em;
+      cursor: pointer;
+      transition: background .16s ease, color .16s ease;
+    }
+
+    .language-switcher button:hover { color: var(--text); }
+    .language-switcher button[aria-pressed="true"] {
+      background: var(--border);
+      color: var(--surface);
+    }
+
     @media (max-width: 1100px) {
       .flow { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
       .flow-step:not(:last-child)::after { display: none; }
@@ -632,7 +688,14 @@
       .slide { padding: 95px 20px 55px; }
       h1 { font-size: clamp(42px, 13vw, 52px); }
       h2 { font-size: clamp(32px, 10.5vw, 40px); line-height: 1.02; }
-      .topbar { width: calc(100% - 32px); justify-content: center; }
+      .topbar {
+        left: 16px;
+        width: calc(100% - 128px);
+        transform: none;
+        justify-content: center;
+      }
+      .topbar > span:nth-child(2) { display: none; }
+      .language-switcher { right: 16px; }
       .cards, .cards--compact, .creative-process, .demo-acts,
       .scope-grid, .guardrails, .metrics, .flow { grid-template-columns: 1fr; }
       .narrative-map, .chapter-intro { grid-template-columns: 1fr; }
@@ -659,7 +722,7 @@
     }
 
     @media print {
-      .topbar, .progress, .hint { display: none; }
+      .topbar, .progress, .hint, .language-switcher { display: none; }
       .slide { min-height: auto; break-after: page; padding: 50px; }
       body::before { display: none; }
     }
@@ -669,7 +732,7 @@
       overflow: hidden;
     }
 
-    body.gate-locked > :not(.access-gate) {
+    body.gate-locked > :not(.access-gate):not(.language-switcher) {
       visibility: hidden;
     }
 
@@ -754,16 +817,20 @@
   </style>
 </head>
 <body class="gate-locked">
+  <div class="language-switcher" role="group" aria-label="Idioma / Language">
+    <button type="button" data-language="es" aria-pressed="true">ES</button>
+    <button type="button" data-language="en" aria-pressed="false">EN</button>
+  </div>
   <aside class="access-gate" id="accessGate" aria-labelledby="accessTitle">
     <div class="access-card">
-      <span class="eyebrow">Acceso privado</span>
+      <span class="eyebrow" data-en="Private access">Acceso privado</span>
       <h1 id="accessTitle">Qurable<br><span>Engage Copilot</span></h1>
-      <p>Ingresá la contraseña compartida por el equipo para abrir la propuesta Q-Leap.</p>
+      <p data-en="Enter the password shared by the team to open the Q-Leap proposal.">Ingresá la contraseña compartida por el equipo para abrir la propuesta Q-Leap.</p>
       <form class="access-form" id="accessForm">
         <input type="text" name="username" value="qurable-engage" autocomplete="username" hidden>
-        <label for="accessPassword">Contraseña</label>
+        <label for="accessPassword" data-en="Password">Contraseña</label>
         <input id="accessPassword" name="password" type="password" autocomplete="current-password" required autofocus>
-        <button type="submit">Entrar</button>
+        <button type="submit" data-en="Enter">Entrar</button>
         <p class="access-error" id="accessError" role="alert" aria-live="polite"></p>
       </form>
       <noscript>Esta presentación necesita JavaScript habilitado para validar el acceso.</noscript>
@@ -778,238 +845,238 @@
   </div>
 
   <main>
-    <section class="slide" id="inicio" data-chapter="Mapa">
+    <section class="slide" id="inicio" data-chapter-es="Mapa" data-chapter-en="Map">
       <div class="hero-grid">
         <div>
           <span class="eyebrow">Qurable Engage Copilot · Q-Leap</span>
-          <h1>¿Qué campaña conviene <span>activar hoy?</span></h1>
-          <p class="lead">Qurable Engage Copilot usa el contexto que Qurable ya reúne para proponer un <strong>Segment, una Next Best Action y una Campaign</strong> lista para revisar.</p>
+          <h1><span class="i18n-plain" data-en="Which campaign should we">¿Qué campaña conviene</span> <span data-en="activate today?">activar hoy?</span></h1>
+          <p class="lead" data-en="Qurable Engage Copilot uses the context Qurable already brings together to propose a Segment, a Next Best Action and a Campaign ready for review.">Qurable Engage Copilot usa el contexto que Qurable ya reúne para proponer un <strong>Segmento, una Próxima mejor acción y una Campaña</strong> lista para revisar.</p>
           <div class="narrative-map" aria-label="Estructura de la propuesta">
-            <div class="narrative-step"><span>01</span><strong>Problema</strong></div>
-            <div class="narrative-step"><span>02</span><strong>Solución</strong></div>
-            <div class="narrative-step"><span>03</span><strong>Proceso creativo</strong></div>
+            <div class="narrative-step"><span>01</span><strong data-en="Problem">Problema</strong></div>
+            <div class="narrative-step"><span>02</span><strong data-en="Solution">Solución</strong></div>
+            <div class="narrative-step"><span>03</span><strong data-en="Creative process">Proceso creativo</strong></div>
           </div>
         </div>
         <figure class="visual-panel">
           <div class="art-frame">
-            <img class="art" src="assets/01-senales-a-campania-v2.png" alt="Señales de loyalty convertidas en una campaña lista para aprobación">
+            <img class="art" src="assets/01-senales-a-campania-v2.png" alt="Señales de fidelización convertidas en una campaña lista para aprobación" data-en-alt="Loyalty signals turned into a campaign ready for approval">
           </div>
-          <figcaption class="caption">Customer data, Predictions y Strategies orientan la propuesta; marketing conserva la aprobación.</figcaption>
+          <figcaption class="caption" data-en="Customer data, Predictions and Strategies guide the proposal; marketing retains approval.">Datos del cliente, Predicciones y Estrategias orientan la propuesta; marketing conserva la aprobación.</figcaption>
         </figure>
       </div>
-      <span class="hint">↓ Scroll · Flechas para navegar</span>
+      <span class="hint" data-en="↓ Scroll · Use arrows to navigate">↓ Scroll · Flechas para navegar</span>
     </section>
 
-    <section class="slide" data-chapter="Problema">
-      <span class="eyebrow">01 · Problema</span>
-      <h2>Qurable ya reúne las piezas. La decisión todavía exige conectarlas.</h2>
-      <p class="lead">Customer profiles, Predictions, Segments, Campaigns, Coupons, Promotions y Outreach aportan el contexto. Preparar una acción coordinada todavía exige recorrerlos y componer la estrategia.</p>
+    <section class="slide" data-chapter-es="Problema" data-chapter-en="Problem">
+      <span class="eyebrow" data-en="01 · Problem">01 · Problema</span>
+      <h2 data-en="Qurable already brings the pieces together. The decision still requires connecting them.">Qurable ya reúne las piezas. La decisión todavía exige conectarlas.</h2>
+      <p class="lead" data-en="Customer details, Predictions, Segments, Campaigns, Coupons, Promotions and Outreach provide the context. Preparing a coordinated action still requires navigating them and composing the strategy.">Detalles del cliente, Predicciones, Segmentos, Campañas, Cupones, Promociones y Difusión aportan el contexto. Preparar una acción coordinada todavía exige recorrerlos y componer la estrategia.</p>
       <div class="problem-layout">
         <figure class="visual-panel">
           <div class="art-frame">
-            <img class="art" src="assets/02-problema-herramientas-manuales-v2.png" alt="Trabajo manual para coordinar audiencias, beneficios, pushes y campañas">
+            <img class="art" src="assets/02-problema-herramientas-manuales-v2.png" alt="Trabajo manual para coordinar segmentos, recompensas, difusión y campañas" data-en-alt="Manual work to coordinate segments, rewards, outreach and campaigns">
           </div>
-          <figcaption class="caption">La mayor carga aparece entre reconocer una oportunidad en el customer y dejar una Campaign lista para revisar.</figcaption>
+          <figcaption class="caption" data-en="The greatest effort sits between recognizing a customer opportunity and leaving a Campaign ready for review.">La mayor carga aparece entre reconocer una oportunidad en el cliente y dejar una Campaña lista para revisar.</figcaption>
         </figure>
         <div class="cards cards--compact">
-          <article class="card red"><h3>Contexto distribuido</h3><p>Stats, Points, Coupons, Transactions y Predictions viven en distintas vistas.</p></article>
-          <article class="card yellow"><h3>Strategy manual</h3><p>Segment, Rewards, Campaign y Outreach se definen paso a paso.</p></article>
-          <article class="card blue"><h3>Aprendizaje fragmentado</h3><p>Dashboards mide resultados; la próxima decisión requiere reunir ese contexto.</p></article>
+          <article class="card red"><h3 data-en="Distributed context">Contexto distribuido</h3><p data-en="Stats, Points, Coupons, Transactions and Predictions live in different views.">Estadísticas, Puntos, Cupones, Transacciones y Predicciones viven en distintas vistas.</p></article>
+          <article class="card yellow"><h3 data-en="Manual strategy">Estrategia manual</h3><p data-en="Segment, Rewards, Campaign and Outreach are defined step by step.">Segmento, Recompensas, Campaña y Difusión se definen paso a paso.</p></article>
+          <article class="card blue"><h3 data-en="Fragmented learning">Aprendizaje fragmentado</h3><p data-en="Dashboards measure results; the next decision requires bringing that context together.">Paneles miden resultados; la próxima decisión requiere reunir ese contexto.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="slide" data-chapter="Solución">
-      <span class="eyebrow">02 · Solución</span>
-      <h2>Del Customer profile a una Next Best Action priorizada.</h2>
-      <p class="lead">El copiloto toma el AI briefing que Qurable ya plantea y lo conecta con un Segment, Rewards y una Campaign en Draft.</p>
-      <p class="solution-statement">Stats, Predictions y loyalty data explican qué acción conviene para ese customer y por qué.
-        <small>Customer data + Predictions + Strategies + revisión de marketing.</small>
+    <section class="slide" data-chapter-es="Solución" data-chapter-en="Solution">
+      <span class="eyebrow" data-en="02 · Solution">02 · Solución</span>
+      <h2 data-en="From Customer details to a prioritized Next Best Action.">De los Detalles del cliente a una Próxima mejor acción priorizada.</h2>
+      <p class="lead" data-en="The copilot takes the AI briefing Qurable already offers and connects it with a Segment, Rewards and a Campaign in Draft.">El copiloto toma el resumen con IA que Qurable ya plantea y lo conecta con un Segmento, Recompensas y una Campaña en Borrador.</p>
+      <p class="solution-statement" data-en="Stats, Predictions and loyalty data explain which action fits that customer and why.<small>Customer data + Predictions + Strategies + marketing review.</small>">Estadísticas, Predicciones y datos de fidelización explican qué acción conviene para ese cliente y por qué.
+        <small>Datos del cliente + Predicciones + Estrategias + revisión de marketing.</small>
       </p>
     </section>
 
-    <section class="slide" data-chapter="Solución">
-      <span class="eyebrow">Cómo funciona</span>
-      <h2>Tres movimientos convierten Customer data en una Strategy.</h2>
+    <section class="slide" data-chapter-es="Solución" data-chapter-en="Solution">
+      <span class="eyebrow" data-en="How it works">Cómo funciona</span>
+      <h2 data-en="Three moves turn Customer data into a Strategy.">Tres movimientos convierten los Datos del cliente en una Estrategia.</h2>
       <div class="cards">
-        <article class="card blue"><span class="number">01 · LEER CUSTOMER</span><h3>Reunir el contexto</h3><p>Stats, Points, Coupons, Transactions y Badges.</p></article>
-        <article class="card orange"><span class="number">02 · INTERPRETAR</span><h3>Priorizar con Predictions</h3><p>CLV tiers, Redemption likelihood y Churn risk sostienen la recomendación.</p></article>
-        <article class="card sage"><span class="number">03 · PREPARAR</span><h3>Componer la Strategy</h3><p>Segment, Campaign, Rewards y Outreach content quedan listos para revisión.</p></article>
+        <article class="card blue"><span class="number" data-en="01 · READ CUSTOMER">01 · LEER CLIENTE</span><h3 data-en="Bring the context together">Reunir el contexto</h3><p data-en="Stats, Points, Coupons, Transactions and Badges.">Estadísticas, Puntos, Cupones, Transacciones e Insignias.</p></article>
+        <article class="card orange"><span class="number" data-en="02 · INTERPRET">02 · INTERPRETAR</span><h3 data-en="Prioritize with Predictions">Priorizar con Predicciones</h3><p data-en="CLV tiers, Redemption likelihood and Churn risk support the recommendation.">Niveles de valor (CLV), Probabilidad de canje y Riesgo de abandono sostienen la recomendación.</p></article>
+        <article class="card sage"><span class="number" data-en="03 · PREPARE">03 · PREPARAR</span><h3 data-en="Compose the Strategy">Componer la Estrategia</h3><p data-en="Segment, Campaign, Rewards and Outreach content are ready for review.">Segmento, Campaña, Recompensas y contenido de Difusión quedan listos para revisión.</p></article>
       </div>
     </section>
 
-    <section class="slide" data-chapter="Solución">
-      <span class="eyebrow">Demo Q-Leap · Reactivación</span>
-      <h2>De un customer con Churn risk a una Campaign en Draft.</h2>
+    <section class="slide" data-chapter-es="Solución" data-chapter-en="Solution">
+      <span class="eyebrow" data-en="Q-Leap demo · Reactivation">Demo Q-Leap · Reactivación</span>
+      <h2 data-en="From a customer with Churn risk to a Campaign in Draft.">De un cliente con Riesgo de abandono a una Campaña en Borrador.</h2>
       <div class="demo-acts">
         <article class="demo-act">
-          <span>ACTO 1 · CUSTOMER</span>
-          <div class="demo-step"><b>01</b><div><strong>Objetivo</strong><p>Reactivar customers con Churn risk alto y CLV relevante.</p></div></div>
-          <div class="demo-step"><b>02</b><div><strong>Contexto</strong><p>Last purchase, Purchases, Points, Coupon history y Predictions.</p></div></div>
+          <span data-en="ACT 1 · CUSTOMER">ACTO 1 · CLIENTE</span>
+          <div class="demo-step"><b>01</b><div><strong data-en="Objective">Objetivo</strong><p data-en="Reactivate customers with high Churn risk and relevant CLV.">Reactivar clientes con Riesgo de abandono alto y Niveles de valor (CLV) relevantes.</p></div></div>
+          <div class="demo-step"><b>02</b><div><strong data-en="Context">Contexto</strong><p data-en="Last purchase, Purchases, Points, Coupon history and Predictions.">Última compra, Compras, Puntos, Historial de cupones y Predicciones.</p></div></div>
         </article>
         <article class="demo-act">
-          <span>ACTO 2 · STRATEGY</span>
-          <div class="demo-step"><b>03</b><div><strong>Segment</strong><p>Churn risk, CLV tiers y Redemption likelihood explican la oportunidad.</p></div></div>
-          <div class="demo-step"><b>04</b><div><strong>Next Best Action</strong><p>Coupon o Points reward, con una razón priorizada.</p></div></div>
+          <span data-en="ACT 2 · STRATEGY">ACTO 2 · ESTRATEGIA</span>
+          <div class="demo-step"><b>03</b><div><strong data-en="Segment">Segmento</strong><p data-en="Churn risk, CLV tiers and Redemption likelihood explain the opportunity.">Riesgo de abandono, Niveles de valor (CLV) y Probabilidad de canje explican la oportunidad.</p></div></div>
+          <div class="demo-step"><b>04</b><div><strong data-en="Next Best Action">Próxima mejor acción</strong><p data-en="Coupon or Points reward, with a prioritized rationale.">Cupón o recompensa en Puntos, con una razón priorizada.</p></div></div>
         </article>
         <article class="demo-act">
-          <span>ACTO 3 · DRAFT</span>
-          <div class="demo-step"><b>05</b><div><strong>Campaign</strong><p>Segment y Rewards quedan configurados con status Draft.</p></div></div>
-          <div class="demo-step"><b>06</b><div><strong>Outreach</strong><p>Contenido para WhatsApp o Email, preparado para revisión humana.</p></div></div>
+          <span data-en="ACT 3 · DRAFT">ACTO 3 · BORRADOR</span>
+          <div class="demo-step"><b>05</b><div><strong data-en="Campaign">Campaña</strong><p data-en="Segment and Rewards are configured with Draft status.">Segmento y Recompensas quedan configurados con estado Borrador.</p></div></div>
+          <div class="demo-step"><b>06</b><div><strong data-en="Outreach">Difusión</strong><p data-en="Content for WhatsApp or Email, prepared for human review.">Contenido para WhatsApp o Correo, preparado para revisión humana.</p></div></div>
         </article>
       </div>
-      <div class="demo-payoff"><strong>El salto visible:</strong> el AI briefing se materializa como una Strategy revisable en Qurable.</div>
+      <div class="demo-payoff" data-en="The AI briefing becomes a Strategy that can be reviewed in Qurable.">El resumen con IA se materializa como una Estrategia revisable en Qurable.</div>
     </section>
 
-    <section class="slide" data-chapter="Solución">
-      <span class="eyebrow">Por qué Qurable</span>
-      <h2>Qurable conecta Customer data, Strategies y resultados medibles.</h2>
+    <section class="slide" data-chapter-es="Solución" data-chapter-en="Solution">
+      <span class="eyebrow" data-en="Why Qurable">Por qué Qurable</span>
+      <h2 data-en="Qurable connects Customer data, Strategies and measurable results.">Qurable conecta Datos del cliente, Estrategias y resultados medibles.</h2>
       <div class="cards">
-        <article class="card blue"><span class="number">CUSTOMER CONTEXT</span><h3>Concentra las señales</h3><p>Profile, Stats, Points, Coupons, Transactions y Predictions.</p></article>
-        <article class="card orange"><span class="number">STRATEGIES</span><h3>Organiza la activación</h3><p>Segments, Triggers, Campaigns, Missions y Trivias.</p></article>
-        <article class="card sage"><span class="number">ACTIVATION &amp; PROOF</span><h3>Mide la respuesta</h3><p>Promotions, Coupons, Outreach, Conversion Rate y ROI.</p></article>
+        <article class="card blue"><span class="number" data-en="CUSTOMER CONTEXT">CONTEXTO DEL CLIENTE</span><h3 data-en="Bring signals together">Concentra las señales</h3><p data-en="Profile, Stats, Points, Coupons, Transactions and Predictions.">Datos personales, Estadísticas, Puntos, Cupones, Transacciones y Predicciones.</p></article>
+        <article class="card orange"><span class="number" data-en="STRATEGIES">ESTRATEGIAS</span><h3 data-en="Organize activation">Organiza la activación</h3><p data-en="Segments, Triggers, Campaigns, Missions and Trivias.">Segmentos, Automatizaciones, Campañas, Misiones y Trivias.</p></article>
+        <article class="card sage"><span class="number" data-en="ACTIVATION &amp; PROOF">ACTIVACIÓN Y RESULTADOS</span><h3 data-en="Measure the response">Mide la respuesta</h3><p data-en="Promotions, Coupons, Outreach, Conversion Rate and ROI.">Promociones, Cupones, Difusión, Tasa de Conversión y ROI.</p></article>
       </div>
-      <p class="solution-statement" style="font-size:clamp(26px,3.5vw,48px); margin-bottom:0">Cada Campaign puede enriquecer la siguiente Next Best Action.</p>
+      <p class="solution-statement" style="font-size:clamp(26px,3.5vw,48px); margin-bottom:0" data-en="Each Campaign can enrich the next Next Best Action.">Cada Campaña puede enriquecer la siguiente Próxima mejor acción.</p>
     </section>
 
-    <section class="slide" data-chapter="Solución">
-      <span class="eyebrow">Capas y responsabilidades</span>
-      <h2>Cinco capas llevan un AI briefing hasta una Campaign controlada.</h2>
+    <section class="slide" data-chapter-es="Solución" data-chapter-en="Solution">
+      <span class="eyebrow" data-en="Layers and responsibilities">Capas y responsabilidades</span>
+      <h2 data-en="Five layers take an AI briefing into a controlled Campaign.">Cinco capas llevan un resumen con IA hasta una Campaña controlada.</h2>
       <div class="stack">
         <div class="layer">
-          <strong>Qurable AI / Copilot</strong>
-          <p>Interpreta el objetivo, prepara el AI briefing y prioriza las Next Best Actions.</p>
-          <code>objective → briefing → actions</code>
+          <strong data-en="Qurable AI / Copilot">Qurable IA / Copiloto</strong>
+          <p data-en="Interprets the objective, prepares the AI briefing and prioritizes Next Best Actions.">Interpreta el objetivo, prepara el resumen con IA y prioriza las Próximas mejores acciones.</p>
+          <code data-en="objective → briefing → actions">objetivo → resumen → acciones</code>
         </div>
         <div class="layer">
-          <strong>Customer data &amp; Predictions</strong>
-          <p>Combina Stats, actividad, CLV tiers, Redemption likelihood y Churn risk.</p>
-          <code>profile → predictions → priority</code>
+          <strong data-en="Customer data &amp; Predictions">Datos del cliente y Predicciones</strong>
+          <p data-en="Combines Stats, activity, CLV tiers, Redemption likelihood and Churn risk.">Combina Estadísticas, actividad, Niveles de valor (CLV), Probabilidad de canje y Riesgo de abandono.</p>
+          <code data-en="profile → predictions → priority">perfil → predicciones → prioridad</code>
         </div>
         <div class="layer">
-          <strong>Strategies</strong>
-          <p>Organiza Segments, Triggers, Campaigns y Missions alrededor del objetivo.</p>
-          <code>segment → campaign → trigger</code>
+          <strong data-en="Strategies">Estrategias</strong>
+          <p data-en="Organizes Segments, Triggers, Campaigns and Missions around the objective.">Organiza Segmentos, Automatizaciones, Campañas y Misiones alrededor del objetivo.</p>
+          <code data-en="segment → campaign → trigger">segmento → campaña → automatización</code>
         </div>
         <div class="layer">
-          <strong>Rewards &amp; Outreach</strong>
-          <p>Combina Points, Coupons, Promotions y contenido para WhatsApp o Email.</p>
-          <code>rewards → content → draft</code>
+          <strong data-en="Rewards &amp; Outreach">Recompensas y Difusión</strong>
+          <p data-en="Combines Points, Coupons, Promotions and content for WhatsApp or Email.">Combina Puntos, Cupones, Promociones y contenido para WhatsApp o Correo.</p>
+          <code data-en="rewards → content → draft">recompensas → contenido → borrador</code>
         </div>
         <div class="layer">
-          <strong>Marketing &amp; Dashboards</strong>
-          <p>Revisa Drafts y monitorea Reached, Conversion Rate, Revenue y ROI.</p>
-          <code>review → activate → measure</code>
+          <strong data-en="Marketing &amp; Dashboards">Marketing y Paneles</strong>
+          <p data-en="Reviews Drafts and monitors Reached, Conversion Rate, Revenue and ROI.">Revisa Borradores y monitorea Alcanzados, Tasa de Conversión, Ingresos y ROI.</p>
+          <code data-en="review → activate → measure">revisar → activar → medir</code>
         </div>
       </div>
     </section>
 
-    <section class="slide" data-chapter="Proceso creativo">
-      <span class="eyebrow">03 · Proceso creativo</span>
-      <h2>Una capacidad amplia, demostrada con un flujo reconocible.</h2>
-      <p class="lead">Elegimos reactivación para recorrer Customer profile, Churn risk, Next Best Actions y Campaign en una misma historia.</p>
+    <section class="slide" data-chapter-es="Proceso creativo" data-chapter-en="Creative process">
+      <span class="eyebrow" data-en="03 · Creative process">03 · Proceso creativo</span>
+      <h2 data-en="A broad capability, demonstrated through a recognizable flow.">Una capacidad amplia, demostrada con un flujo reconocible.</h2>
+      <p class="lead" data-en="We chose reactivation to connect Customer details, Churn risk, Next Best Actions and Campaign in one story.">Elegimos reactivación para recorrer Detalles del cliente, Riesgo de abandono, Próximas mejores acciones y Campaña en una misma historia.</p>
       <div class="creative-process">
-        <article class="creative-step"><span>01 · ENMARCAR</span><h3>Partir de la fricción</h3><p>Conectar una señal del customer con una acción concreta.</p></article>
-        <article class="creative-step"><span>02 · EXPLORAR</span><h3>Usar Customer profile</h3><p>Stats, actividad y loyalty data sostienen el caso.</p></article>
-        <article class="creative-step"><span>03 · PRIORIZAR</span><h3>Elegir Churn risk</h3><p>Una Prediction reconocible concentra la historia.</p></article>
-        <article class="creative-step"><span>04 · MATERIALIZAR</span><h3>Producir Campaign Draft</h3><p>Segment, Rewards y Outreach vuelven tangible la propuesta.</p></article>
-        <article class="creative-step"><span>05 · MEDIR</span><h3>Observar la respuesta</h3><p>Reached, Conversion Rate y ROI prueban utilidad.</p></article>
-        <article class="creative-step"><span>06 · ESCALAR</span><h3>Automatizar Strategies</h3><p>Triggers y recurring Campaigns amplían la capacidad.</p></article>
+        <article class="creative-step"><span data-en="01 · FRAME">01 · ENMARCAR</span><h3 data-en="Start with friction">Partir de la fricción</h3><p data-en="Connect a customer signal with a concrete action.">Conectar una señal del cliente con una acción concreta.</p></article>
+        <article class="creative-step"><span data-en="02 · EXPLORE">02 · EXPLORAR</span><h3 data-en="Use Customer details">Usar Detalles del cliente</h3><p data-en="Stats, activity and loyalty data support the case.">Estadísticas, actividad y datos de fidelización sostienen el caso.</p></article>
+        <article class="creative-step"><span data-en="03 · PRIORITIZE">03 · PRIORIZAR</span><h3 data-en="Choose Churn risk">Elegir Riesgo de abandono</h3><p data-en="A recognizable Prediction focuses the story.">Una Predicción reconocible concentra la historia.</p></article>
+        <article class="creative-step"><span data-en="04 · MATERIALIZE">04 · MATERIALIZAR</span><h3 data-en="Produce a Campaign Draft">Producir una Campaña en Borrador</h3><p data-en="Segment, Rewards and Outreach make the proposal tangible.">Segmento, Recompensas y Difusión vuelven tangible la propuesta.</p></article>
+        <article class="creative-step"><span data-en="05 · MEASURE">05 · MEDIR</span><h3 data-en="Observe the response">Observar la respuesta</h3><p data-en="Reached, Conversion Rate and ROI demonstrate usefulness.">Alcanzados, Tasa de Conversión y ROI prueban utilidad.</p></article>
+        <article class="creative-step"><span data-en="06 · SCALE">06 · ESCALAR</span><h3 data-en="Automate Strategies">Automatizar Estrategias</h3><p data-en="Triggers and recurring Campaigns expand the capability.">Automatizaciones y Campañas recurrentes amplían la capacidad.</p></article>
       </div>
     </section>
 
-    <section class="slide" data-chapter="Proceso creativo">
-      <span class="eyebrow">Alcance</span>
-      <h2>En un día demostramos una Strategy completa.</h2>
+    <section class="slide" data-chapter-es="Proceso creativo" data-chapter-en="Creative process">
+      <span class="eyebrow" data-en="Scope">Alcance</span>
+      <h2 data-en="In one day, we demonstrate a complete Strategy.">En un día demostramos una Estrategia completa.</h2>
       <div class="scope-grid">
         <article class="scope yes">
-          <h3>Demostramos hoy</h3>
+          <h3 data-en="We demonstrate today">Demostramos hoy</h3>
           <ul>
-            <li>Un objetivo de reactivación.</li>
-            <li>Customer data y Predictions de demo.</li>
-            <li>Un Segment propuesto.</li>
-            <li>AI briefing y Next Best Action priorizada.</li>
-            <li>Campaign Draft con Rewards y Outreach.</li>
+            <li data-en="One reactivation objective.">Un objetivo de reactivación.</li>
+            <li data-en="Demo Customer data and Predictions.">Datos del cliente y Predicciones de demo.</li>
+            <li data-en="One proposed Segment.">Un Segmento propuesto.</li>
+            <li data-en="AI briefing and prioritized Next Best Action.">Resumen con IA y Próxima mejor acción priorizada.</li>
+            <li data-en="Campaign Draft with Rewards and Outreach.">Campaña en Borrador con Recompensas y Difusión.</li>
           </ul>
         </article>
         <article class="scope no">
-          <h3>Validamos después</h3>
+          <h3 data-en="We validate next">Validamos después</h3>
           <ul>
-            <li>Scoring con datos reales.</li>
-            <li>Activación real de Campaign y Outreach.</li>
-            <li>Triggers y recurring Campaigns.</li>
-            <li>Medición controlada de impacto.</li>
-            <li>Más objetivos y verticales.</li>
+            <li data-en="Scoring with real data.">Scoring con datos reales.</li>
+            <li data-en="Live Campaign and Outreach activation.">Activación real de Campaña y Difusión.</li>
+            <li data-en="Triggers and recurring Campaigns.">Automatizaciones y Campañas recurrentes.</li>
+            <li data-en="Controlled impact measurement.">Medición controlada de impacto.</li>
+            <li data-en="More objectives and verticals.">Más objetivos y verticales.</li>
           </ul>
         </article>
       </div>
     </section>
 
-    <section class="slide" data-chapter="Proceso creativo">
-      <span class="eyebrow">Cómo medir valor</span>
-      <h2>La medición crece con la madurez del producto.</h2>
+    <section class="slide" data-chapter-es="Proceso creativo" data-chapter-en="Creative process">
+      <span class="eyebrow" data-en="How to measure value">Cómo medir valor</span>
+      <h2 data-en="Measurement grows with product maturity.">La medición crece con la madurez del producto.</h2>
       <div class="metrics">
-        <div class="metric"><b>Time to Draft</b><span>Desde el objetivo hasta una Campaign revisable.</span></div>
-        <div class="metric"><b>Acceptance</b><span>Drafts aprobados, editados o descartados.</span></div>
-        <div class="metric"><b>Reached</b><span>Customers alcanzados por la Campaign del piloto.</span></div>
-        <div class="metric"><b>Conversion Rate &amp; ROI</b><span>Resultado de Promotions medido con control.</span></div>
+        <div class="metric"><b data-en="Time to Draft">Tiempo al Borrador</b><span data-en="From the objective to a reviewable Campaign.">Desde el objetivo hasta una Campaña revisable.</span></div>
+        <div class="metric"><b data-en="Acceptance">Aceptación</b><span data-en="Drafts approved, edited or discarded.">Borradores aprobados, editados o descartados.</span></div>
+        <div class="metric"><b data-en="Reached">Alcanzados</b><span data-en="Customers reached by the pilot Campaign.">Clientes alcanzados por la Campaña del piloto.</span></div>
+        <div class="metric"><b data-en="Conversion Rate &amp; ROI">Tasa de Conversión y ROI</b><span data-en="Promotion results measured with a control.">Resultado de Promociones medido con control.</span></div>
       </div>
       <div class="cards" style="margin-top:28px">
-        <article class="card"><h3>En Q-Leap</h3><p>Medir tiempo, completitud del Draft y claridad del AI briefing.</p></article>
-        <article class="card sage"><h3>En un piloto</h3><p>Comparar Reached, redemptions, Revenue, Conversion Rate y opt-out.</p></article>
-        <article class="card orange"><h3>En producto</h3><p>Usar Dashboards para enriquecer la próxima Next Best Action.</p></article>
+        <article class="card"><h3 data-en="In Q-Leap">En Q-Leap</h3><p data-en="Measure time, Draft completeness and AI briefing clarity.">Medir tiempo, completitud del Borrador y claridad del resumen con IA.</p></article>
+        <article class="card sage"><h3 data-en="In a pilot">En un piloto</h3><p data-en="Compare Reached, redemptions, Revenue, Conversion Rate and opt-out.">Comparar Alcanzados, canjes, Ingresos, Tasa de Conversión y opt-out.</p></article>
+        <article class="card orange"><h3 data-en="In product">En producto</h3><p data-en="Use Dashboards to enrich future Next Best Actions.">Usar Paneles para enriquecer futuras Próximas mejores acciones.</p></article>
       </div>
     </section>
 
-    <section class="slide" data-chapter="Proceso creativo">
-      <span class="eyebrow">Guardrails</span>
-      <h2>La autonomía avanza dentro de límites claros.</h2>
+    <section class="slide" data-chapter-es="Proceso creativo" data-chapter-en="Creative process">
+      <span class="eyebrow" data-en="Guardrails">Límites de control</span>
+      <h2 data-en="Autonomy advances within clear boundaries.">La autonomía avanza dentro de límites claros.</h2>
       <div class="guardrails">
-        <article class="guardrail"><b>01</b><div><strong>Draft first</strong><p>Cada Campaign queda en Draft para revisión humana.</p></div></article>
-        <article class="guardrail"><b>02</b><div><strong>Budgets</strong><p>Rewards y Promotions respetan límites configurados.</p></div></article>
-        <article class="guardrail"><b>03</b><div><strong>Frecuencia y status</strong><p>Draft, Active y Paused hacen visible el control operativo.</p></div></article>
-        <article class="guardrail"><b>04</b><div><strong>Privacidad</strong><p>Onboarding, contacto verificado y opt-out protegen al customer.</p></div></article>
-        <article class="guardrail"><b>05</b><div><strong>Explainability</strong><p>El AI briefing muestra Predictions y señales relevantes.</p></div></article>
-        <article class="guardrail"><b>06</b><div><strong>Experimentation</strong><p>Dashboards y grupos de control validan el impacto.</p></div></article>
+        <article class="guardrail"><b>01</b><div><strong data-en="Draft first">Primero Borrador</strong><p data-en="Each Campaign stays in Draft for human review.">Cada Campaña queda en Borrador para revisión humana.</p></div></article>
+        <article class="guardrail"><b>02</b><div><strong data-en="Budgets">Presupuestos</strong><p data-en="Rewards and Promotions respect configured limits.">Recompensas y Promociones respetan límites configurados.</p></div></article>
+        <article class="guardrail"><b>03</b><div><strong data-en="Frequency and status">Frecuencia y estado</strong><p data-en="Draft, Active and Paused make operational control visible.">Borrador, Activa y Pausada hacen visible el control operativo.</p></div></article>
+        <article class="guardrail"><b>04</b><div><strong data-en="Privacy">Privacidad</strong><p data-en="Onboarding, verified contact and opt-out protect the customer.">Incorporación, contacto verificado y opt-out protegen al cliente.</p></div></article>
+        <article class="guardrail"><b>05</b><div><strong data-en="Explainability">Explicabilidad</strong><p data-en="The AI briefing shows Predictions and relevant signals.">El resumen con IA muestra Predicciones y señales relevantes.</p></div></article>
+        <article class="guardrail"><b>06</b><div><strong data-en="Experimentation">Experimentación</strong><p data-en="Dashboards and control groups validate impact.">Paneles y grupos de control validan el impacto.</p></div></article>
       </div>
     </section>
 
-    <section class="slide" data-chapter="Proceso creativo">
-      <span class="eyebrow">Roadmap de producto</span>
-      <h2>Tres etapas conectan el briefing con Strategies adaptativas.</h2>
-      <p class="lead">Qurable ya aporta Customer data, Predictions y Strategies. Q-Leap conecta esas capacidades en una experiencia asistida.</p>
+    <section class="slide" data-chapter-es="Proceso creativo" data-chapter-en="Creative process">
+      <span class="eyebrow" data-en="Product roadmap">Roadmap de producto</span>
+      <h2 data-en="Three stages connect the briefing with adaptive Strategies.">Tres etapas conectan el resumen con Estrategias adaptativas.</h2>
+      <p class="lead" data-en="Qurable already provides Customer data, Predictions and Strategies. Q-Leap connects those capabilities in an assisted experience.">Qurable ya aporta Datos del cliente, Predicciones y Estrategias. Q-Leap conecta esas capacidades en una experiencia asistida.</p>
       <div class="roadmap-layout">
         <div class="roadmap-list">
           <article class="stage" data-stage="1">
-            <span class="tag">Base visible en Qurable</span>
-            <h3>Next Best Actions</h3>
-            <p>AI briefing y acciones priorizadas a partir de loyalty data.</p>
+            <span class="tag" data-en="Visible in Qurable">Base visible en Qurable</span>
+            <h3 data-en="Next Best Actions">Próximas mejores acciones</h3>
+            <p data-en="AI briefing and prioritized actions drawn from loyalty data.">Resumen con IA y acciones priorizadas a partir de datos de fidelización.</p>
           </article>
           <article class="stage" data-stage="2">
-            <span class="tag">Siguiente</span>
-            <h3>Campaign Copilot</h3>
-            <p>Propone Segment, Rewards, Campaign Draft y Outreach content.</p>
+            <span class="tag" data-en="Next">Siguiente</span>
+            <h3 data-en="Campaign Copilot">Copiloto de Campañas</h3>
+            <p data-en="Proposes a Segment, Rewards, Campaign Draft and Outreach content.">Propone Segmento, Recompensas, Campaña en Borrador y contenido de Difusión.</p>
           </article>
           <article class="stage" data-stage="3">
-            <span class="tag">Visión</span>
-            <h3>Adaptive Strategies</h3>
-            <p>Triggers y recurring Campaigns responden a resultados de Dashboards.</p>
+            <span class="tag" data-en="Vision">Visión</span>
+            <h3 data-en="Adaptive Strategies">Estrategias adaptativas</h3>
+            <p data-en="Triggers and recurring Campaigns respond to Dashboard results.">Automatizaciones y Campañas recurrentes responden a resultados de Paneles.</p>
           </article>
         </div>
         <figure class="visual-panel">
           <div class="art-frame">
-            <img class="art" src="assets/03-retargeting-funnel-v2.png" alt="Journey adaptativo desde interés hasta conversión">
+            <img class="art" src="assets/03-retargeting-funnel-v2.png" alt="Journey adaptativo desde interés hasta conversión" data-en-alt="Adaptive journey from interest to conversion">
           </div>
-          <figcaption class="caption">Customer data, Predictions y resultados alimentan la siguiente Strategy.</figcaption>
+          <figcaption class="caption" data-en="Customer data, Predictions and results feed the next Strategy.">Datos del cliente, Predicciones y resultados alimentan la siguiente Estrategia.</figcaption>
         </figure>
       </div>
     </section>
 
-    <section class="slide closing" data-chapter="Cierre">
-      <span class="eyebrow">La propuesta</span>
-      <h2>De “¿qué campaña conviene activar?” a una <span style="color:var(--orange)">Next Best Action lista para revisar.</span></h2>
-      <p class="lead">Qurable Engage Copilot usa Customer data, Predictions y Strategies de Qurable para preparar Segment, Rewards, Campaign y Outreach.</p>
-      <p class="brandline">Próximo paso → demostrarlo con Churn risk</p>
+    <section class="slide closing" data-chapter-es="Cierre" data-chapter-en="Close">
+      <span class="eyebrow" data-en="The proposal">La propuesta</span>
+      <h2><span class="i18n-plain" data-en="From “which campaign should we activate?” to a">De “¿qué campaña conviene activar?” a una</span> <span style="color:var(--orange)" data-en="Next Best Action ready for review.">Próxima mejor acción lista para revisar.</span></h2>
+      <p class="lead" data-en="Qurable Engage Copilot uses Qurable Customer data, Predictions and Strategies to prepare a Segment, Rewards, Campaign and Outreach.">Qurable Engage Copilot usa Datos del cliente, Predicciones y Estrategias de Qurable para preparar Segmento, Recompensas, Campaña y Difusión.</p>
+      <p class="brandline" data-en="Next step → demonstrate it with Churn risk">Próximo paso → demostrarlo con Riesgo de abandono</p>
     </section>
   </main>
 
@@ -1019,58 +1086,139 @@
     const accessForm = document.getElementById('accessForm');
     const accessPassword = document.getElementById('accessPassword');
     const accessError = document.getElementById('accessError');
-    const appTermSource = [
-      'Next Best Actions?',
-      'Customer profiles?',
-      'Customer data',
-      'Redemption likelihood',
-      'Conversion Rate',
-      'Coupon history',
-      'Last purchase',
-      'Churn risk',
-      'CLV tiers',
-      'AI briefing',
-      'recurring Campaigns',
-      'Campaigns?',
-      'Coupons?',
-      'Promotions?',
-      'Predictions?',
-      'Strategies',
-      'Segments?',
-      'Rewards?',
-      'Outreach',
-      'Dashboards',
-      'Transactions',
-      'Stats',
-      'Points',
-      'Badges',
-      'Triggers',
-      'Missions',
-      'Trivias',
-      'Purchases',
-      'WhatsApp',
-      'Email',
-      'Drafts?',
-      'Reached',
-      'Revenue',
-      'ROI',
-      'Active',
-      'Paused',
-      'Onboarding',
-      'Budgets',
-    ].join('|');
-    const appTermPattern = new RegExp(`\\b(${appTermSource})\\b`, 'g');
-    const appTermTestPattern = new RegExp(`\\b(${appTermSource})\\b`);
+    const languageButtons = [...document.querySelectorAll('[data-language]')];
+    const translatableNodes = [...document.querySelectorAll('[data-en]')];
+    const translatableImages = [...document.querySelectorAll('[data-en-alt]')];
+    const appTerms = {
+      es: [
+        'Próximas mejores acciones',
+        'Próxima mejor acción',
+        'Detalles del cliente',
+        'Datos del cliente',
+        'Datos personales',
+        'Probabilidad de canje',
+        'Tasa de Conversión',
+        'Historial de cupones',
+        'Última compra',
+        'Riesgo de abandono',
+        'Niveles de valor (CLV)',
+        'resumen con IA',
+        'Campañas recurrentes',
+        'Automatizaciones',
+        'Transacciones',
+        'Estadísticas',
+        'Predicciones',
+        'Predicción',
+        'Estrategias',
+        'Estrategia',
+        'Promociones',
+        'Recompensas',
+        'Recompensa',
+        'Segmentos',
+        'Segmento',
+        'Campañas',
+        'Campaña',
+        'Cupones',
+        'Cupón',
+        'Difusión',
+        'Paneles',
+        'Puntos',
+        'Insignias',
+        'Misiones',
+        'Trivias',
+        'Compras',
+        'WhatsApp',
+        'Correo',
+        'Borradores',
+        'Borrador',
+        'Alcanzados',
+        'Ingresos',
+        'ROI',
+        'Activa',
+        'Pausada',
+        'Incorporación',
+        'Presupuestos',
+      ],
+      en: [
+        'Next Best Actions',
+        'Next Best Action',
+        'Customer details',
+        'Customer data',
+        'Redemption likelihood',
+        'Conversion Rate',
+        'Coupon history',
+        'Last purchase',
+        'Churn risk',
+        'CLV tiers',
+        'AI briefing',
+        'recurring Campaigns',
+        'Transactions',
+        'Predictions',
+        'Prediction',
+        'Strategies',
+        'Strategy',
+        'Promotions',
+        'Rewards',
+        'Reward',
+        'Segments',
+        'Segment',
+        'Campaigns',
+        'Campaign',
+        'Coupons',
+        'Coupon',
+        'Outreach',
+        'Dashboards',
+        'Dashboard',
+        'Stats',
+        'Points',
+        'Badges',
+        'Triggers',
+        'Missions',
+        'Trivias',
+        'Purchases',
+        'WhatsApp',
+        'Email',
+        'Drafts',
+        'Draft',
+        'Reached',
+        'Revenue',
+        'ROI',
+        'Active',
+        'Paused',
+        'Onboarding',
+        'Budgets',
+      ],
+    };
+    let currentLanguage = sessionStorage.getItem('qurable-engage-language') === 'en' ? 'en' : 'es';
 
-    function highlightAppTerms() {
+    translatableNodes.forEach(node => {
+      node.dataset.es = node.innerHTML;
+    });
+    translatableImages.forEach(image => {
+      image.dataset.esAlt = image.alt;
+    });
+
+    function termPatterns(language) {
+      const source = [...appTerms[language]]
+        .sort((a, b) => b.length - a.length)
+        .map(term => term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+        .join('|');
+      return {
+        match: new RegExp(`(${source})`, 'g'),
+        test: new RegExp(`(${source})`),
+      };
+    }
+
+    function highlightAppTerms(language) {
       const main = document.querySelector('main');
+      const patterns = termPatterns(language);
       const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
         acceptNode(node) {
           const parent = node.parentElement;
-          if (!parent || parent.closest('strong, b, code, h1, h2, h3, .eyebrow, .number, .tag')) {
+          if (!parent || parent.closest('strong, b, code, h1, h2, h3, .eyebrow, .number, .tag, .app-term')) {
             return NodeFilter.FILTER_REJECT;
           }
-          return appTermTestPattern.test(node.nodeValue)
+          return patterns.test.test(node.nodeValue)
             ? NodeFilter.FILTER_ACCEPT
             : NodeFilter.FILTER_REJECT;
         },
@@ -1080,7 +1228,7 @@
 
       textNodes.forEach(node => {
         const fragment = document.createDocumentFragment();
-        node.nodeValue.split(appTermPattern).forEach((part, index) => {
+        node.nodeValue.split(patterns.match).forEach((part, index) => {
           if (index % 2 === 1) {
             const strong = document.createElement('strong');
             strong.className = 'app-term';
@@ -1094,7 +1242,38 @@
       });
     }
 
-    highlightAppTerms();
+    function setLanguage(language) {
+      currentLanguage = language === 'en' ? 'en' : 'es';
+      translatableNodes.forEach(node => {
+        node.innerHTML = currentLanguage === 'en' ? node.dataset.en : node.dataset.es;
+      });
+      translatableImages.forEach(image => {
+        image.alt = currentLanguage === 'en' ? image.dataset.enAlt : image.dataset.esAlt;
+      });
+      languageButtons.forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.language === currentLanguage));
+      });
+      document.documentElement.lang = currentLanguage;
+      document.title = currentLanguage === 'en'
+        ? 'Qurable Engage Copilot · Q-Leap Proposal'
+        : 'Qurable Engage Copilot · Propuesta Q-Leap';
+      document.querySelector('meta[name="description"]').content = currentLanguage === 'en'
+        ? 'Q-Leap proposal: Qurable Engage Copilot turns loyalty signals into actionable campaigns and journeys.'
+        : 'Propuesta Q-Leap: Qurable Engage Copilot convierte señales de fidelización en campañas y journeys accionables.';
+      document.querySelector('.narrative-map').setAttribute(
+        'aria-label',
+        currentLanguage === 'en' ? 'Proposal structure' : 'Estructura de la propuesta',
+      );
+      sessionStorage.setItem('qurable-engage-language', currentLanguage);
+      highlightAppTerms(currentLanguage);
+    }
+
+    languageButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        setLanguage(button.dataset.language);
+        updatePosition();
+      });
+    });
 
     function unlockPresentation() {
       document.body.classList.remove('gate-locked');
@@ -1124,7 +1303,9 @@
         return;
       }
       accessPassword.value = '';
-      accessError.textContent = 'Contraseña incorrecta.';
+      accessError.textContent = currentLanguage === 'en'
+        ? 'Incorrect password.'
+        : 'Contraseña incorrecta.';
       accessPassword.focus();
     });
 
@@ -1143,7 +1324,9 @@
         if (slide.offsetTop <= middle) active = index;
       });
       slideCount.textContent = `${String(active + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
-      chapterName.textContent = slides[active].dataset.chapter || 'Propuesta';
+      chapterName.textContent = currentLanguage === 'en'
+        ? (slides[active].dataset.chapterEn || 'Proposal')
+        : (slides[active].dataset.chapterEs || 'Propuesta');
     }
 
     function go(direction) {
@@ -1168,6 +1351,7 @@
       if (event.key === 'Home') slides[0].scrollIntoView({ behavior: 'smooth' });
       if (event.key === 'End') slides.at(-1).scrollIntoView({ behavior: 'smooth' });
     });
+    setLanguage(currentLanguage);
     updatePosition();
   </script>
 </body>
