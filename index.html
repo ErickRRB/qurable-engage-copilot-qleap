@@ -138,6 +138,11 @@
     }
     .lead strong { color: var(--text); }
 
+    .app-term {
+      color: inherit;
+      font-weight: 800;
+    }
+
     .hero-grid, .split {
       display: grid;
       grid-template-columns: minmax(360px, .82fr) minmax(520px, 1.18fr);
@@ -1014,6 +1019,82 @@
     const accessForm = document.getElementById('accessForm');
     const accessPassword = document.getElementById('accessPassword');
     const accessError = document.getElementById('accessError');
+    const appTermSource = [
+      'Next Best Actions?',
+      'Customer profiles?',
+      'Customer data',
+      'Redemption likelihood',
+      'Conversion Rate',
+      'Coupon history',
+      'Last purchase',
+      'Churn risk',
+      'CLV tiers',
+      'AI briefing',
+      'recurring Campaigns',
+      'Campaigns?',
+      'Coupons?',
+      'Promotions?',
+      'Predictions?',
+      'Strategies',
+      'Segments?',
+      'Rewards?',
+      'Outreach',
+      'Dashboards',
+      'Transactions',
+      'Stats',
+      'Points',
+      'Badges',
+      'Triggers',
+      'Missions',
+      'Trivias',
+      'Purchases',
+      'WhatsApp',
+      'Email',
+      'Drafts?',
+      'Reached',
+      'Revenue',
+      'ROI',
+      'Active',
+      'Paused',
+      'Onboarding',
+      'Budgets',
+    ].join('|');
+    const appTermPattern = new RegExp(`\\b(${appTermSource})\\b`, 'g');
+    const appTermTestPattern = new RegExp(`\\b(${appTermSource})\\b`);
+
+    function highlightAppTerms() {
+      const main = document.querySelector('main');
+      const walker = document.createTreeWalker(main, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || parent.closest('strong, b, code, h1, h2, h3, .eyebrow, .number, .tag')) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return appTermTestPattern.test(node.nodeValue)
+            ? NodeFilter.FILTER_ACCEPT
+            : NodeFilter.FILTER_REJECT;
+        },
+      });
+      const textNodes = [];
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+      textNodes.forEach(node => {
+        const fragment = document.createDocumentFragment();
+        node.nodeValue.split(appTermPattern).forEach((part, index) => {
+          if (index % 2 === 1) {
+            const strong = document.createElement('strong');
+            strong.className = 'app-term';
+            strong.textContent = part;
+            fragment.appendChild(strong);
+          } else if (part) {
+            fragment.appendChild(document.createTextNode(part));
+          }
+        });
+        node.replaceWith(fragment);
+      });
+    }
+
+    highlightAppTerms();
 
     function unlockPresentation() {
       document.body.classList.remove('gate-locked');
